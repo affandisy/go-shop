@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: goshop_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: goshop
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - goshop_network
+
+  redis:
+    image: redis:7-alpine
+    container_name: goshop_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - goshop_network
+volumes:
+  postgres_data:
+  redis_data:
+networks:
+  goshop_network:
+    driver: bridge
+
+# Uncomment jika ingin menjalankan aplikasi di Docker
+  # app:
+  #   build: .
+  #   container_name: goshop_app
+  #   ports:
+  #     - "8888:8888"
+  #     - "8889:8889"
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #   environment:
+  #     - DATABASE_URI=postgres://postgres:postgres@postgres:5432/goshop?sslmode=disable
+  #     - REDIS_URI=redis:6379
+  #   networks:
+  #     - goshop_network
