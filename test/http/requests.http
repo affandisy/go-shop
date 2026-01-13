@@ -1,0 +1,104 @@
+### Health Check
+GET http://localhost:8888/health
+Content-Type: application/json
+
+### Ping
+GET http://localhost:8888/api/v1/ping
+Content-Type: application/json
+
+### Register User
+# POST http://localhost:8888/api/v1/auth/register
+# Content-Type: application/json
+#
+# {
+#   "email": "user@example.com",
+#   "password": "password123",
+#   "name": "John Doe",
+#   "phone": "081234567890"
+# }
+
+### Login User
+# POST http://localhost:8888/api/v1/auth/login
+# Content-Type: application/json
+#
+# {
+#   "email": "user@example.com",
+#   "password": "password123"
+# }
+
+### Login as Admin (seeded user)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@goshop.com",
+  "password": "admin123"
+}
+
+### Get My Profile
+GET {{baseUrl}}/users/profile
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Update My Profile
+PUT {{baseUrl}}/users/profile
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "John Doe Updated",
+  "phone": "081234567890",
+  "email": "user@example.com",
+  "password": ""
+}
+
+### Get All Users (Admin Only)
+GET {{baseUrl}}/users?page=1&limit=10
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Get All Products
+# GET http://localhost:8888/api/v1/products?page=1&limit=10
+# Content-Type: application/json
+
+### Get Product by ID
+# GET http://localhost:8888/api/v1/products/product-id-here
+# Content-Type: application/json
+
+### Create Product (Admin only)
+# POST http://localhost:8888/api/v1/products
+# Content-Type: application/json
+# Authorization: Bearer your-token-here
+#
+# {
+#   "name": "Product Name",
+#   "description": "Product description",
+#   "price": 100000,
+#   "stock": 50,
+#   "sku": "PROD-001",
+#   "category_id": "category-id-here",
+#   "image_url": "https://example.com/image.jpg"
+# }
+
+### Create Order
+# POST http://localhost:8888/api/v1/orders
+# Content-Type: application/json
+# Authorization: Bearer your-token-here
+#
+# {
+#   "items": [
+#     {
+#       "product_id": "product-id-1",
+#       "quantity": 2
+#     },
+#     {
+#       "product_id": "product-id-2",
+#       "quantity": 1
+#     }
+#   ],
+#   "notes": "Please deliver after 5 PM"
+# }
+
+# GET http://localhost:8888/api/v1/orders
+# Content-Type: application/json
+# Authorization: Bearer your-token-here

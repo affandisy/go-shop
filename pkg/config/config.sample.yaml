@@ -1,0 +1,8 @@
+environment: development
+http_port: "8888"
+grpc_port: "8889"
+auth_secret: "your-secret-key-change-this-in-production"
+database_uri: "postgres://postgres:postgres@localhost:5432/goshop?sslmode=disable"
+redis_uri: "localhost:6379"
+redis_password: ""
+redis_db: 0
