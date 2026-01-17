@@ -54,30 +54,36 @@ func main() {
 	userRepo := repository.NewUserRepository(db)
 	categoryRepo := repository.NewCategoryRepository(db)
 	productRepo := repository.NewProductRepository(db)
+	orderRepo := repository.NewOrderRepository(db)
 
 	userService := service.NewUserService(userRepo)
 	categoryService := service.NewCategoryService(categoryRepo)
 	productService := service.NewProductService(productRepo, categoryRepo)
+	orderService := service.NewOrderService(orderRepo, productRepo)
 
 	userHandler := handler.NewUserHandler(userService)
 	categoryHandler := handler.NewCategoryHandler(categoryService)
 	productHandler := handler.NewProductHandler(productService)
+	orderHandler := handler.NewOrderHandler(orderService)
 
 	router := gin.Default()
 
 	router.Use(middleware.CORSMiddleware())
 	router.Use(middleware.LoggerMiddleware())
 
-	route.SetupRoutes(router, userHandler, categoryHandler, productHandler)
+	route.SetupRoutes(router, userHandler, categoryHandler, productHandler, orderHandler)
 
 	log.Printf("🚀 Starting HTTP server on port %s", cfg.HTTPPort)
 	log.Printf("📝 Environment: %s", cfg.Environment)
 	log.Printf("🔗 Health check: http://localhost:%s/health", cfg.HTTPPort)
 	log.Printf("📚 API Base URL: http://localhost:%s/api/v1", cfg.HTTPPort)
 
-	addr := fmt.Sprintf(":%s", cfg.HTTPPort)
-	log.Printf("Starting HTTP server on port %s", cfg.HTTPPort)
-	if err := router.Run(addr); err != nil {
+	log.Printf("🚀 Starting HTTP server on port %s", cfg.HTTPPort)
+	log.Printf("📝 Environment: %s", cfg.Environment)
+	log.Printf("🔗 Health check: http://localhost:%s/health", cfg.HTTPPort)
+	log.Printf("📚 API Base URL: http://localhost:%s/api/v1", cfg.HTTPPort)
+
+	if err := router.Run(":" + cfg.HTTPPort); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
