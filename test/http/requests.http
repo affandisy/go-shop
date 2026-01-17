@@ -57,28 +57,120 @@ GET {{baseUrl}}/users?page=1&limit=10
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
-### Get All Products
-# GET http://localhost:8888/api/v1/products?page=1&limit=10
-# Content-Type: application/json
+### Get All Categories (Public)
+GET {{baseUrl}}/categories
+Content-Type: application/json
 
-### Get Product by ID
-# GET http://localhost:8888/api/v1/products/product-id-here
-# Content-Type: application/json
+### Get Category by ID (Public)
+GET {{baseUrl}}/categories/{{categoryId}}
+Content-Type: application/json
 
-### Create Product (Admin only)
-# POST http://localhost:8888/api/v1/products
-# Content-Type: application/json
-# Authorization: Bearer your-token-here
-#
-# {
-#   "name": "Product Name",
-#   "description": "Product description",
-#   "price": 100000,
-#   "stock": 50,
-#   "sku": "PROD-001",
-#   "category_id": "category-id-here",
-#   "image_url": "https://example.com/image.jpg"
-# }
+### Create Category (Admin Only)
+POST {{baseUrl}}/categories
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Smartphones",
+  "description": "Mobile phones and smartphones"
+}
+
+### Update Category (Admin Only)
+PUT {{baseUrl}}/categories/{{categoryId}}
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Smartphones Updated",
+  "description": "Latest smartphones and mobile devices"
+}
+
+### Delete Category (Admin Only)
+DELETE {{baseUrl}}/categories/{{categoryId}}
+Authorization: Bearer {{adminToken}}
+
+### Get All Products (Public)
+GET {{baseUrl}}/products?page=1&limit=10
+Content-Type: application/json
+
+### Get Products with Filters
+GET {{baseUrl}}/products?name=iPhone&min_price=5000000&max_price=20000000&page=1&limit=10
+Content-Type: application/json
+
+### Get Products by Category
+GET {{baseUrl}}/products?category_id={{categoryId}}&page=1&limit=10
+Content-Type: application/json
+
+### Get Product by ID (Public)
+GET {{baseUrl}}/products/{{productId}}
+Content-Type: application/json
+
+### Create Product (Admin Only)
+POST {{baseUrl}}/products
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "iPhone 15 Pro Max",
+  "description": "Latest iPhone with A17 Pro chip, titanium design, and advanced camera system",
+  "price": 19999000,
+  "stock": 50,
+  "sku": "IPH-15-PM-256-BLU",
+  "category_id": "{{categoryId}}",
+  "image_url": "https://example.com/iphone-15-pro-max.jpg"
+}
+
+### Create Another Product
+POST {{baseUrl}}/products
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "Samsung Galaxy S24 Ultra",
+  "description": "Premium Android flagship with S Pen and incredible camera",
+  "price": 18999000,
+  "stock": 30,
+  "sku": "SAM-S24-ULTRA-512-BLK",
+  "category_id": "{{categoryId}}",
+  "image_url": "https://example.com/galaxy-s24-ultra.jpg"
+}
+
+### Update Product (Admin Only)
+PUT {{baseUrl}}/products/{{productId}}
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "name": "iPhone 15 Pro Max (Updated)",
+  "description": "Latest iPhone with A17 Pro chip - Now with special discount!",
+  "price": 18999000,
+  "stock": 45,
+  "sku": "IPH-15-PM-256-BLU",
+  "category_id": "{{categoryId}}",
+  "image_url": "https://example.com/iphone-15-pro-max.jpg"
+}
+
+### Update Product Stock (Admin Only)
+PATCH {{baseUrl}}/products/{{productId}}/stock
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "quantity": 10
+}
+
+### Reduce Product Stock (Admin Only)
+PATCH {{baseUrl}}/products/{{productId}}/stock
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "quantity": -5
+}
+
+### Delete Product (Admin Only)
+DELETE {{baseUrl}}/products/{{productId}}
+Authorization: Bearer {{adminToken}}
 
 ### Create Order
 # POST http://localhost:8888/api/v1/orders

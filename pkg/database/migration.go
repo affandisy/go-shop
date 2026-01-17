@@ -70,6 +70,51 @@ func SeedData() error {
 		}
 
 		log.Println("Default categories created")
+
+		var electronicsCategory domain.Category
+		DB.Where("name = ?", "Electronics").First(&electronicsCategory)
+
+		var smartphonesCategory domain.Category
+		DB.Where("name = ?", "Smartphones").First(&smartphonesCategory)
+
+		products := []domain.Product{
+			{
+				Name:        "MacBook Pro 16 M3 Max",
+				Description: "Professional laptop with M3 Max chip, 36GB RAM, 1TB SSD",
+				Price:       49999000,
+				Stock:       10,
+				SKU:         "MBP-16-M3MAX-1TB",
+				CategoryID:  electronicsCategory.ID,
+				ImageURL:    "https://example.com/macbook-pro.jpg",
+				IsActive:    true,
+			},
+			{
+				Name:        "iPhone 15 Pro Max",
+				Description: "Latest iPhone with A17 Pro chip, titanium design, 256GB",
+				Price:       19999000,
+				Stock:       50,
+				SKU:         "IPH-15-PM-256-BLU",
+				CategoryID:  smartphonesCategory.ID,
+				ImageURL:    "https://example.com/iphone-15-pro.jpg",
+				IsActive:    true,
+			},
+			{
+				Name:        "Samsung Galaxy S24 Ultra",
+				Description: "Premium Android flagship with S Pen, 512GB storage",
+				Price:       18999000,
+				Stock:       30,
+				SKU:         "SAM-S24-ULTRA-512-BLK",
+				CategoryID:  smartphonesCategory.ID,
+				ImageURL:    "https://example.com/galaxy-s24.jpg",
+				IsActive:    true,
+			},
+		}
+
+		if err := DB.Create(&products).Error; err != nil {
+			return err
+		}
+
+		log.Println("Default products created")
 	}
 
 	log.Println("Seeding completed successfully")

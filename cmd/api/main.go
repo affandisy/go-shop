@@ -52,17 +52,23 @@ func main() {
 
 	db := database.GetDB()
 	userRepo := repository.NewUserRepository(db)
+	categoryRepo := repository.NewCategoryRepository(db)
+	productRepo := repository.NewProductRepository(db)
 
 	userService := service.NewUserService(userRepo)
+	categoryService := service.NewCategoryService(categoryRepo)
+	productService := service.NewProductService(productRepo, categoryRepo)
 
 	userHandler := handler.NewUserHandler(userService)
+	categoryHandler := handler.NewCategoryHandler(categoryService)
+	productHandler := handler.NewProductHandler(productService)
 
 	router := gin.Default()
 
 	router.Use(middleware.CORSMiddleware())
 	router.Use(middleware.LoggerMiddleware())
 
-	route.SetupRoutes(router, userHandler)
+	route.SetupRoutes(router, userHandler, categoryHandler, productHandler)
 
 	log.Printf("🚀 Starting HTTP server on port %s", cfg.HTTPPort)
 	log.Printf("📝 Environment: %s", cfg.Environment)
