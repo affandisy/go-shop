@@ -31,3 +31,13 @@ type ProductRepository interface {
 	Delete(id string) error
 	UpdateStock(id string, quantity int) error
 }
+
+type OrderRepository interface {
+	Create(order *domain.Order) error
+	GetByID(id string) (*domain.Order, error)
+	GetByOrderNumber(orderNumber string) (*domain.Order, error)
+	GetByUserID(userID string, page, limit int) ([]domain.Order, int64, error)
+	GetAll(page, limit int) ([]domain.Order, int64, error)
+	Update(order *domain.Order) error
+	UpdateStatus(id string, status domain.OrderStatus) error
+}

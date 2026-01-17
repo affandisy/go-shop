@@ -172,25 +172,58 @@ Authorization: Bearer {{adminToken}}
 DELETE {{baseUrl}}/products/{{productId}}
 Authorization: Bearer {{adminToken}}
 
-### Create Order
-# POST http://localhost:8888/api/v1/orders
-# Content-Type: application/json
-# Authorization: Bearer your-token-here
-#
-# {
-#   "items": [
-#     {
-#       "product_id": "product-id-1",
-#       "quantity": 2
-#     },
-#     {
-#       "product_id": "product-id-2",
-#       "quantity": 1
-#     }
-#   ],
-#   "notes": "Please deliver after 5 PM"
-# }
+### Get My Orders (Customer)
+GET {{baseUrl}}/orders?page=1&limit=10
+Authorization: Bearer {{customerToken}}
 
-# GET http://localhost:8888/api/v1/orders
-# Content-Type: application/json
-# Authorization: Bearer your-token-here
+### Get Order by ID (Customer)
+GET {{baseUrl}}/orders/{{orderId}}
+Authorization: Bearer {{customerToken}}
+
+### Get All Orders (Admin Only)
+GET {{baseUrl}}/orders/all?page=1&limit=10
+Authorization: Bearer {{adminToken}}
+
+### ===================================
+### UPDATE ORDER STATUS (Admin Only)
+### ===================================
+
+### Update Status to Paid
+PATCH {{baseUrl}}/orders/{{orderId}}/status
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "status": "paid"
+}
+
+### Update Status to Processing
+PATCH {{baseUrl}}/orders/{{orderId}}/status
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "status": "processing"
+}
+
+### Update Status to Shipped
+PATCH {{baseUrl}}/orders/{{orderId}}/status
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "status": "shipped"
+}
+
+### Update Status to Delivered
+PATCH {{baseUrl}}/orders/{{orderId}}/status
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "status": "delivered"
+}
+
+### Cancel Order (Customer - only if pending or paid)
+POST {{baseUrl}}/orders/{{orderId}}/cancel
+Authorization: Bearer {{customerToken}}

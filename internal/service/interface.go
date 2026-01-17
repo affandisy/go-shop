@@ -29,3 +29,12 @@ type ProductService interface {
 	Delete(id string) error
 	UpdateStock(id string, quantity int) error
 }
+
+type OrderService interface {
+	CreateOrder(userID string, req dto.CreateOrderRequest) (*domain.Order, error)
+	GetOrderByID(orderID string, userID string, isAdmin bool) (*domain.Order, error)
+	GetMyOrders(userID string, page, limit int) ([]domain.Order, int64, error)
+	GetAllOrders(page, limit int) ([]domain.Order, int64, error)
+	UpdateOrderStatus(orderID string, req dto.UpdateOrderStatusRequest) (*domain.Order, error)
+	CancelOrder(orderID string, userID string) error
+}
