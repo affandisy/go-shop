@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRoutes(router *gin.Engine, userHandler *handler.UserHandler, categoryHandler *handler.CategoryHandler, productHandler *handler.ProductHandler, orderHandler *handler.OrderHandler) {
+func SetupRoutes(router *gin.Engine, userHandler *handler.UserHandler, categoryHandler *handler.CategoryHandler, productHandler *handler.ProductHandler, orderHandler *handler.OrderHandler, cacheHandler *handler.CacheHandler) {
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"status":   "OK",
@@ -83,6 +83,15 @@ func SetupRoutes(router *gin.Engine, userHandler *handler.UserHandler, categoryH
 			// Admin only
 			orders.GET("/all", middleware.AdminMiddleware(), orderHandler.GetAllOrders)
 			orders.PATCH("/:id/status", middleware.AdminMiddleware(), orderHandler.UpdateOrderStatus)
+		}
+
+		cacheRoutes := v1.Group("/cache")
+		cacheRoutes.Use(middleware.AuthMiddleware(), middleware.AdminMiddleware())
+		{
+			cacheRoutes.GET("/stats", cacheHandler.GetCacheStats)
+			cacheRoutes.DELETE("/products", cacheHandler.ClearProductsCache)
+			cacheRoutes.DELETE("/categories", cacheHandler.ClearCategoriesCache)
+			cacheRoutes.DELETE("/all", cacheHandler.ClearAllCache)
 		}
 	}
 }

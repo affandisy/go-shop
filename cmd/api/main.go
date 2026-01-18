@@ -9,6 +9,7 @@ import (
 	"github.com/affandisy/goshop/internal/middleware"
 	"github.com/affandisy/goshop/internal/repository"
 	"github.com/affandisy/goshop/internal/service"
+	"github.com/affandisy/goshop/pkg/cache"
 	"github.com/affandisy/goshop/pkg/config"
 	"github.com/affandisy/goshop/pkg/database"
 	"github.com/affandisy/goshop/pkg/redis"
@@ -50,6 +51,9 @@ func main() {
 	}
 	defer redis.Close()
 
+	redisClient := redis.GetClient()
+	cacheService := cache.NewCacheService(redisClient)
+
 	db := database.GetDB()
 	userRepo := repository.NewUserRepository(db)
 	categoryRepo := repository.NewCategoryRepository(db)
@@ -57,21 +61,22 @@ func main() {
 	orderRepo := repository.NewOrderRepository(db)
 
 	userService := service.NewUserService(userRepo)
-	categoryService := service.NewCategoryService(categoryRepo)
-	productService := service.NewProductService(productRepo, categoryRepo)
+	categoryService := service.NewCategoryService(categoryRepo, cacheService)
+	productService := service.NewProductService(productRepo, categoryRepo, cacheService)
 	orderService := service.NewOrderService(orderRepo, productRepo)
 
 	userHandler := handler.NewUserHandler(userService)
 	categoryHandler := handler.NewCategoryHandler(categoryService)
 	productHandler := handler.NewProductHandler(productService)
 	orderHandler := handler.NewOrderHandler(orderService)
+	cacheHandler := handler.NewCacheHandler(cacheService)
 
 	router := gin.Default()
 
 	router.Use(middleware.CORSMiddleware())
 	router.Use(middleware.LoggerMiddleware())
 
-	route.SetupRoutes(router, userHandler, categoryHandler, productHandler, orderHandler)
+	route.SetupRoutes(router, userHandler, categoryHandler, productHandler, orderHandler, cacheHandler)
 
 	log.Printf("🚀 Starting HTTP server on port %s", cfg.HTTPPort)
 	log.Printf("📝 Environment: %s", cfg.Environment)
