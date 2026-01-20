@@ -1,6 +1,8 @@
 package service
 
 import (
+	"time"
+
 	"github.com/affandisy/goshop/internal/domain"
 	"github.com/affandisy/goshop/internal/domain/dto"
 )
@@ -37,4 +39,10 @@ type OrderService interface {
 	GetAllOrders(page, limit int) ([]domain.Order, int64, error)
 	UpdateOrderStatus(orderID string, req dto.UpdateOrderStatusRequest) (*domain.Order, error)
 	CancelOrder(orderID string, userID string) error
+}
+
+type ReportService interface {
+	GenerateUsersReport(format string) ([]byte, string, error)
+	GenerateProductsReport(format string) ([]byte, string, error)
+	GenerateOrdersReport(startDate, endDate time.Time, format string) ([]byte, string, error)
 }
