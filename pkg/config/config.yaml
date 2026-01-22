@@ -1,8 +1,0 @@
-environment: development
-http_port: "8888"
-grpc_port: "8889"
-auth_secret: "jwtsecretkey"
-database_uri: "postgres://postgres:postgres@localhost:5433/goshop?sslmode=disable"
-redis_uri: "localhost:6379"
-redis_password: ""
-redis_db: 0

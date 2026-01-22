@@ -4,19 +4,19 @@ Official Repository: <br>
 
 ## ✨ Features
 
-- 🔐 **JWT Authentication** - Secure user authentication
-- 👥 **User Management** - Registration, login, profile management
-- 📦 **Product Management** - CRUD with filtering, search, and pagination
-- 🏷️ **Category Management** - Organize products by categories
-- 🛒 **Order Management** - Complete checkout and order workflow
-- 📊 **Stock Management** - Automatic stock tracking
-- 🔄 **Order Status Workflow** - pending → paid → processing → shipped → delivered
-- 🎫 **Role-Based Access** - Customer and Admin roles
-- 🗑️ **Soft Delete** - Safe data deletion with audit trail
-- 📄 **Pagination** - Efficient data retrieval
-- 🔍 **Advanced Filtering** - Search by name, category, price range
+- **JWT Authentication** - Secure user authentication
+- **User Management** - Registration, login, profile management
+- **Product Management** - CRUD with filtering, search, and pagination
+- **Category Management** - Organize products by categories
+- **Order Management** - Complete checkout and order workflow
+- **Stock Management** - Automatic stock tracking
+- **Order Status Workflow** - pending → paid → processing → shipped → delivered
+- **Role-Based Access** - Customer and Admin roles
+- **Soft Delete** - Safe data deletion with audit trail
+- **Pagination** - Efficient data retrieval
+- **Advanced Filtering** - Search by name, category, price range
 
-## 🏗️ Architecture
+## Architecture
 
 Built with **Clean Architecture (Domain-Driven Design)**:
 
@@ -29,7 +29,7 @@ Handler → Service → Repository → Database
 - **Repository**: Data access layer
 - **Domain**: Business models & entities
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Go 1.21 or higher
@@ -37,12 +37,7 @@ Handler → Service → Repository → Database
 - Redis 7+
 - Docker & Docker Compose (optional)
 
-## 📚 API Documentation
-
-### Base URL
-```
-http://localhost:8888/api/v1
-```
+## API Documentation
 
 ### Authentication Endpoints
 | Method | Endpoint | Description |
