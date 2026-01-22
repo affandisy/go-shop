@@ -1,0 +1,296 @@
+### Variables
+@baseUrl = http://localhost:8888/api/v1
+@customerToken = your-customer-token-here
+@adminToken = your-admin-token-here
+@orderId = your-order-id-here
+@paymentId = your-payment-id-here
+
+### ===================================
+### COMPLETE PAYMENT FLOW
+### ===================================
+
+### STEP 1: Login as Customer
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "customer@test.com",
+  "password": "password123"
+}
+
+### STEP 2: Get Products
+GET {{baseUrl}}/products
+
+### STEP 3: Create Order
+POST {{baseUrl}}/orders
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "product_id": "paste-product-id-here",
+      "quantity": 1
+    }
+  ],
+  "notes": "Test order for payment"
+}
+
+### STEP 4: Create Payment
+POST {{baseUrl}}/payments
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "order_id": "{{orderId}}",
+  "payment_method": "credit_card"
+}
+
+### STEP 5: Get Payment Details
+GET {{baseUrl}}/payments/{{paymentId}}
+Authorization: Bearer {{customerToken}}
+
+### STEP 6: Get Payment by Order ID
+GET {{baseUrl}}/payments/order/{{orderId}}
+Authorization: Bearer {{customerToken}}
+
+### ===================================
+### PAYMENT METHODS
+### ===================================
+
+### Payment with Credit Card
+POST {{baseUrl}}/payments
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "order_id": "{{orderId}}",
+  "payment_method": "credit_card"
+}
+
+### Payment with Bank Transfer
+POST {{baseUrl}}/payments
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "order_id": "{{orderId}}",
+  "payment_method": "bank_transfer"
+}
+
+### Payment with GoPay
+POST {{baseUrl}}/payments
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "order_id": "{{orderId}}",
+  "payment_method": "gopay"
+}
+
+### Payment with QRIS
+POST {{baseUrl}}/payments
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "order_id": "{{orderId}}",
+  "payment_method": "qris"
+}
+
+### Payment with Alfamart
+POST {{baseUrl}}/payments
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "order_id": "{{orderId}}",
+  "payment_method": "alfamart"
+}
+
+### ===================================
+### MIDTRANS NOTIFICATION (Webhook)
+### ===================================
+
+### Simulate Payment Success Notification
+POST {{baseUrl}}/payments/notification
+Content-Type: application/json
+
+{
+  "transaction_status": "settlement",
+  "order_id": "PAY-ORD-20240115-1705308123-12345",
+  "gross_amount": "19999000",
+  "payment_type": "credit_card",
+  "transaction_id": "test-transaction-123",
+  "fraud_status": "accept",
+  "signature_key": "test-signature"
+}
+
+### Simulate Payment Pending Notification
+POST {{baseUrl}}/payments/notification
+Content-Type: application/json
+
+{
+  "transaction_status": "pending",
+  "order_id": "PAY-ORD-20240115-1705308123-12345",
+  "gross_amount": "19999000",
+  "payment_type": "bank_transfer",
+  "transaction_id": "test-transaction-123",
+  "signature_key": "test-signature"
+}
+
+### Simulate Payment Failed Notification
+POST {{baseUrl}}/payments/notification
+Content-Type: application/json
+
+{
+  "transaction_status": "deny",
+  "order_id": "PAY-ORD-20240115-1705308123-12345",
+  "gross_amount": "19999000",
+  "payment_type": "credit_card",
+  "transaction_id": "test-transaction-123",
+  "fraud_status": "deny",
+  "signature_key": "test-signature"
+}
+
+### Simulate Payment Expired Notification
+POST {{baseUrl}}/payments/notification
+Content-Type: application/json
+
+{
+  "transaction_status": "expire",
+  "order_id": "PAY-ORD-20240115-1705308123-12345",
+  "gross_amount": "19999000",
+  "payment_type": "bank_transfer",
+  "transaction_id": "test-transaction-123",
+  "signature_key": "test-signature"
+}
+
+### ===================================
+### ADMIN OPERATIONS
+### ===================================
+
+### Login as Admin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@goshop.com",
+  "password": "admin123"
+}
+
+### Get All Payments (Admin Only)
+GET {{baseUrl}}/payments/list/all?page=1&limit=10
+Authorization: Bearer {{adminToken}}
+
+### ===================================
+### ERROR CASES
+### ===================================
+
+### Try to create payment without auth
+POST {{baseUrl}}/payments
+Content-Type: application/json
+
+{
+  "order_id": "{{orderId}}",
+  "payment_method": "credit_card"
+}
+
+### Try to create payment for non-existent order
+POST {{baseUrl}}/payments
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "order_id": "non-existent-uuid",
+  "payment_method": "credit_card"
+}
+
+### Try to create payment for already paid order
+POST {{baseUrl}}/payments
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "order_id": "{{orderId}}",
+  "payment_method": "credit_card"
+}
+
+### Try to create payment for other user's order
+POST {{baseUrl}}/payments
+Authorization: Bearer {{customerToken}}
+Content-Type: application/json
+
+{
+  "order_id": "other-user-order-id",
+  "payment_method": "credit_card"
+}
+
+### ===================================
+### TESTING WORKFLOW
+### ===================================
+
+### Workflow 1: Successful Payment
+# 1. Create order → Status: pending
+# 2. Create payment → Get Snap URL
+# 3. Complete payment at Snap URL
+# 4. Midtrans sends notification → Order status: paid
+
+### Workflow 2: Failed Payment
+# 1. Create order → Status: pending
+# 2. Create payment → Get Snap URL
+# 3. Use test card that will fail
+# 4. Midtrans sends notification → Payment status: failed
+# 5. Order still pending
+# 6. Customer can retry payment
+
+### Workflow 3: Expired Payment
+# 1. Create order → Status: pending
+# 2. Create payment → Expires in 24h
+# 3. Wait for expiration or simulate
+# 4. Midtrans sends notification → Payment status: expired
+# 5. Customer notified
+
+### ===================================
+### VERIFICATION CHECKS
+### ===================================
+
+### After Payment Success - Check Order
+GET {{baseUrl}}/orders/{{orderId}}
+Authorization: Bearer {{customerToken}}
+# Should show status: "paid"
+
+### After Payment Success - Check Payment
+GET {{baseUrl}}/payments/order/{{orderId}}
+Authorization: Bearer {{customerToken}}
+# Should show status: "success"
+# Should have paid_at timestamp
+
+### ===================================
+### NOTES FOR TESTING
+### ===================================
+
+# 1. Get Midtrans Sandbox Keys:
+#    - Login to https://dashboard.sandbox.midtrans.com
+#    - Go to Settings → Access Keys
+#    - Copy Server Key and Client Key
+#    - Update config.yaml
+
+# 2. For local webhook testing, use ngrok:
+#    ngrok http 8888
+#    Update Midtrans notification URL with ngrok URL
+
+# 3. Test Card Numbers (Sandbox):
+#    Success: 4811 1111 1111 1114
+#    Failed:  4911 1111 1111 1113
+#    CVV: 123, Exp: 01/25
+
+# 4. Complete Payment:
+#    - Copy snap_url from payment response
+#    - Open in browser
+#    - Complete payment with test card
+#    - Check notification in application logs
+
+# 5. Verify Order Status:
+#    - After successful payment, order status should be "paid"
+#    - Check with GET /orders/:id

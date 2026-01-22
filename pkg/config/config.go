@@ -9,14 +9,17 @@ import (
 )
 
 type Config struct {
-	Environment   string `yaml:"environment"`
-	HTTPPort      string `yaml:"http_port"`
-	GRPCPort      string `yaml:"grpc_port"`
-	AuthSecret    string `yaml:"auth_secret"`
-	DatabaseURI   string `yaml:"database_uri"`
-	RedisURI      string `yaml:"redis_uri"`
-	RedisPassword string `yaml:"redis_password"`
-	RedisDB       int    `yaml:"redis_db"`
+	Environment         string `yaml:"environment"`
+	HTTPPort            string `yaml:"http_port"`
+	GRPCPort            string `yaml:"grpc_port"`
+	AuthSecret          string `yaml:"auth_secret"`
+	DatabaseURI         string `yaml:"database_uri"`
+	RedisURI            string `yaml:"redis_uri"`
+	RedisPassword       string `yaml:"redis_password"`
+	RedisDB             int    `yaml:"redis_db"`
+	MidtransServerKey   string `yaml:"midtrans_server_key"`
+	MidtransClientKey   string `yaml:"midtrans_client_key"`
+	MidtransEnvironment string `yaml:"midtrans_environment"`
 }
 
 var (

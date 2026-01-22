@@ -16,6 +16,7 @@ func AutoMigrate() error {
 		&domain.Product{},
 		&domain.Order{},
 		&domain.OrderItem{},
+		&domain.Payment{},
 	)
 
 	if err != nil {

@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRoutes(router *gin.Engine, userHandler *handler.UserHandler, categoryHandler *handler.CategoryHandler, productHandler *handler.ProductHandler, orderHandler *handler.OrderHandler, cacheHandler *handler.CacheHandler) {
+func SetupRoutes(router *gin.Engine, userHandler *handler.UserHandler, categoryHandler *handler.CategoryHandler, productHandler *handler.ProductHandler, orderHandler *handler.OrderHandler, paymentHandler *handler.PaymentHandler, cacheHandler *handler.CacheHandler) {
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"status":   "OK",
@@ -85,6 +85,23 @@ func SetupRoutes(router *gin.Engine, userHandler *handler.UserHandler, categoryH
 			orders.PATCH("/:id/status", middleware.AdminMiddleware(), orderHandler.UpdateOrderStatus)
 		}
 
+		// Payment routes
+		payments := v1.Group("/payments")
+		{
+			// Public webhook endpoint (no auth - Midtrans callback)
+			payments.POST("/notification", paymentHandler.HandleNotification)
+
+			// Protected routes
+			payments.Use(middleware.AuthMiddleware())
+			payments.POST("", paymentHandler.CreatePayment)
+			payments.GET("/:id", paymentHandler.GetPaymentByID)
+			payments.GET("/order/:order_id", paymentHandler.GetPaymentByOrderID)
+
+			// Admin only
+			payments.GET("/list/all", middleware.AdminMiddleware(), paymentHandler.GetAllPayments)
+		}
+
+		// Cache management routes (admin only)
 		cacheRoutes := v1.Group("/cache")
 		cacheRoutes.Use(middleware.AuthMiddleware(), middleware.AdminMiddleware())
 		{

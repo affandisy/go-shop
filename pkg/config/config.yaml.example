@@ -6,3 +6,6 @@ database_uri: "postgres://postgres:postgres@localhost:5432/goshop?sslmode=disabl
 redis_uri: "localhost:6379"
 redis_password: ""
 redis_db: 0
+midtrans_server_key: "SB-Mid-server-YOUR_SERVER_KEY_HERE"
+midtrans_client_key: "SB-Mid-client-YOUR_CLIENT_KEY_HERE"
+midtrans_environment: "sandbox"
