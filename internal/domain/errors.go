@@ -23,6 +23,13 @@ var (
 	ErrCannotCancelOrder  = errors.New("cannot cancel order")
 	ErrEmptyCart          = errors.New("cart is empty")
 
+	// Payment errors
+	ErrPaymentNotFound      = errors.New("payment not found")
+	ErrPaymentAlreadyExists = errors.New("payment already exists for this order")
+	ErrPaymentFailed        = errors.New("payment failed")
+	ErrInvalidPaymentStatus = errors.New("invalid payment status")
+	ErrOrderAlreadyPaid     = errors.New("order already paid")
+
 	// General errors
 	ErrInvalidInput   = errors.New("invalid input")
 	ErrInternalServer = errors.New("internal server error")

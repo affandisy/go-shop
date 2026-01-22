@@ -23,7 +23,7 @@ type UserResponse struct {
 	IsActive bool   `json:"is_active"`
 }
 
-func MapToResponse(u *domain.User) UserResponse {
+func UserMapToResponse(u *domain.User) UserResponse {
 	return UserResponse{
 		ID:       u.ID,
 		Email:    u.Email,

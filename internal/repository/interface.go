@@ -41,3 +41,12 @@ type OrderRepository interface {
 	Update(order *domain.Order) error
 	UpdateStatus(id string, status domain.OrderStatus) error
 }
+
+type PaymentRepository interface {
+	Create(payment *domain.Payment) error
+	GetByID(id string) (*domain.Payment, error)
+	GetByOrderID(orderID string) (*domain.Payment, error)
+	GetByMidtransOrderID(midtransOrderID string) (*domain.Payment, error)
+	Update(payment *domain.Payment) error
+	List(page, limit int) ([]domain.Payment, int64, error)
+}

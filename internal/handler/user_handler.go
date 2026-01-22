@@ -39,7 +39,7 @@ func (h *UserHandler) Register(c *gin.Context) {
 		return
 	}
 
-	response.Created(c, "User registered successfully", dto.MapToResponse(user))
+	response.Created(c, "User registered successfully", dto.UserMapToResponse(user))
 }
 
 func (h *UserHandler) Login(c *gin.Context) {
@@ -65,7 +65,7 @@ func (h *UserHandler) Login(c *gin.Context) {
 	}
 
 	response.Success(c, "Login Successful", gin.H{
-		"user":  dto.MapToResponse(user),
+		"user":  dto.UserMapToResponse(user),
 		"token": token,
 	})
 }
@@ -88,7 +88,7 @@ func (h *UserHandler) GetProfile(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, "Profile retrieved successfully", dto.MapToResponse(user))
+	response.Success(c, "Profile retrieved successfully", dto.UserMapToResponse(user))
 }
 
 func (h *UserHandler) UpdateProfile(c *gin.Context) {
@@ -114,7 +114,7 @@ func (h *UserHandler) UpdateProfile(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, "Profile updated successfully", dto.MapToResponse(user))
+	response.Success(c, "Profile updated successfully", dto.UserMapToResponse(user))
 }
 
 func (h *UserHandler) GetUsers(c *gin.Context) {
@@ -132,7 +132,7 @@ func (h *UserHandler) GetUsers(c *gin.Context) {
 
 	userResponses := make([]dto.UserResponse, len(users))
 	for i, user := range users {
-		userResponses[i] = dto.MapToResponse(&user)
+		userResponses[i] = dto.UserMapToResponse(&user)
 	}
 
 	paginationResp := utils.CreatePaginationResponse(params.Page, params.Limit, total, userResponses)

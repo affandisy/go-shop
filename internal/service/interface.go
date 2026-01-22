@@ -41,6 +41,14 @@ type OrderService interface {
 	CancelOrder(orderID string, userID string) error
 }
 
+type PaymentService interface {
+	CreatePayment(userID string, req dto.CreatePaymentRequest) (*domain.Payment, error)
+	GetPaymentByID(id string) (*domain.Payment, error)
+	GetPaymentByOrderID(orderID string) (*domain.Payment, error)
+	HandleNotification(notification dto.PaymentNotification) error
+	GetAllPayments(page, limit int) ([]domain.Payment, int64, error)
+}
+
 type ReportService interface {
 	GenerateUsersReport(format string) ([]byte, string, error)
 	GenerateProductsReport(format string) ([]byte, string, error)
